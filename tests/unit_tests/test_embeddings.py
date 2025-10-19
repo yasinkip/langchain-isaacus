@@ -1,16 +1,28 @@
 """Test embedding model integration."""
 
-from typing import Type
+from langchain_core.embeddings import Embeddings
+from pydantic import SecretStr
 
-from langchain_isaacus.embeddings import IsaacusEmbeddings
-from langchain_tests.unit_tests import EmbeddingsUnitTests
+from langchain_isaacus import IsaacusEmbeddings
+
+MODEL = "kanon-2-embedder"
 
 
-class TestParrotLinkEmbeddingsUnit(EmbeddingsUnitTests):
-    @property
-    def embeddings_class(self) -> Type[IsaacusEmbeddings]:
-        return IsaacusEmbeddings
+def test_initialization_kanon_2_embedder() -> None:
+    """Test embedding model initialization."""
+    emb = IsaacusEmbeddings(api_key=SecretStr("NOT_A_VALID_KEY"), model=MODEL)  # type: ignore
+    assert isinstance(emb, Embeddings)
+    assert emb.batch_size == 128
+    assert emb.model == MODEL
 
-    @property
-    def embedding_model_params(self) -> dict:
-        return {"model": "nest-embed-001"}
+
+def test_initialization_with_dimension() -> None:
+    emb = IsaacusEmbeddings(
+        api_key=SecretStr("NOT_A_VALID_KEY"),  # type: ignore
+        model=MODEL,
+        dimensions=256,
+        batch_size=10,
+    )
+    assert isinstance(emb, Embeddings)
+    assert emb.model == MODEL
+    assert emb.dimensions == 256
