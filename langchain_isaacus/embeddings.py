@@ -2,6 +2,7 @@ from typing import List, Literal, Optional
 
 from isaacus import AsyncIsaacus, Isaacus  # type: ignore
 from langchain_core.embeddings import Embeddings
+from pydantic import SecretStr
 
 _MAX_BATCH_SIZE = 128
 _TASKS = {
@@ -34,7 +35,7 @@ class IsaacusEmbeddings(Embeddings):
             (currently 128 as of 19 October 2025).
 
     Key init args — client params:
-        api_key: Optional[str]
+        api_key: Optional[SecretStr]
             Isaacus API key. If not provided, will attempt to read from the
             ``ISAACUS_API_KEY`` environment variable.
         base_url: Optional[str]
@@ -100,7 +101,7 @@ class IsaacusEmbeddings(Embeddings):
     def __init__(
         self,
         model: str,
-        api_key: Optional[str] = None,
+        api_key: Optional[SecretStr] = None,
         dimensions: Optional[int] = None,
         base_url: Optional[str] = None,
         batch_size: int = _MAX_BATCH_SIZE,
