@@ -1,7 +1,6 @@
-import asyncio
 from typing import List, Literal, Optional
 
-from isaacus import AsyncIsaacus, Isaacus
+from isaacus import AsyncIsaacus, Isaacus  # type: ignore
 from langchain_core.embeddings import Embeddings
 
 _MAX_BATCH_SIZE = 128
@@ -9,6 +8,7 @@ _TASKS = {
     "query": "retrieval/query",
     "document": "retrieval/document",
 }
+
 
 class IsaacusEmbeddings(Embeddings):
     """Isaacus embedding model integration.
@@ -32,7 +32,7 @@ class IsaacusEmbeddings(Embeddings):
             Number of texts to embed in each batch request. Default is 128.
             Should not exceed the maximum batch size supported by the model or API
             (currently 128 as of 19 October 2025).
-    
+
     Key init args — client params:
         api_key: Optional[str]
             Isaacus API key. If not provided, will attempt to read from the
@@ -40,7 +40,7 @@ class IsaacusEmbeddings(Embeddings):
         base_url: Optional[str]
             Base URL for the Isaacus API. Set this if you are self-hosting the Isaacus
             API as an enterprise user or are using an Isaacus API-compatible service.
-        
+
 
     See full list of supported init args and their descriptions in the params section.
 
@@ -112,25 +112,25 @@ class IsaacusEmbeddings(Embeddings):
         self.batch_size = batch_size
         self._client = None
         self._aclient = None
-    
+
     def _get_client(self) -> Isaacus:
         if not self._client:
             self._client = Isaacus(
                 api_key=self.api_key,
                 base_url=self.base_url,
             )
-        
+
         return self._client
-    
+
     def _get_aclient(self) -> AsyncIsaacus:
         if not self._aclient:
             self._aclient = AsyncIsaacus(
                 api_key=self.api_key,
                 base_url=self.base_url,
             )
-        
+
         return self._aclient
-    
+
     def _sync_embed(
         self,
         texts: List[str],
@@ -139,7 +139,7 @@ class IsaacusEmbeddings(Embeddings):
         client = self._get_client()
         task = _TASKS[task]
         embeddings: List[List[float]] = []
-        
+
         for i in range(0, len(texts), self.batch_size):
             batch = texts[i : i + self.batch_size]
             response = client.embeddings.create(
@@ -150,7 +150,7 @@ class IsaacusEmbeddings(Embeddings):
             )
             batch_embeddings = [item.embedding for item in response.embeddings]
             embeddings.extend(batch_embeddings)
-        
+
         return embeddings
 
     async def _async_embed(
@@ -161,7 +161,7 @@ class IsaacusEmbeddings(Embeddings):
         client = self._get_aclient()
         task = _TASKS[task]
         embeddings: List[List[float]] = []
-        
+
         for i in range(0, len(texts), self.batch_size):
             batch = texts[i : i + self.batch_size]
             response = await client.embeddings.create(
@@ -172,7 +172,7 @@ class IsaacusEmbeddings(Embeddings):
             )
             batch_embeddings = [item.embedding for item in response.embeddings]
             embeddings.extend(batch_embeddings)
-        
+
         return embeddings
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
