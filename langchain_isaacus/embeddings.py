@@ -1,6 +1,6 @@
 from typing import List, Literal, Optional
 
-from isaacus import AsyncIsaacus, Isaacus  # type: ignore
+from isaacus import AsyncIsaacus, Isaacus
 from langchain_core.embeddings import Embeddings
 from pydantic import SecretStr
 
