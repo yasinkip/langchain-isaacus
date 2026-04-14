@@ -19,6 +19,21 @@ And you should configure credentials by setting the following environment variab
 ```python
 from langchain_isaacus import IsaacusEmbeddings
 
-embeddings = IsaacusEmbeddings()
+embeddings = IsaacusEmbeddings(model="kanon-2-embedder")
 embeddings.embed_query("What is the meaning of life?")
+```
+
+## Reranking
+
+`IsaacusRerank` class exposes reranking from Isaacus. 
+
+```python
+from langchain_isaacus import IsaacusRerank
+from langchain_core.documents import Document
+
+rerankings = IsaacusRerank(model="kanon-2-reranker")
+embeddings.compress_documents(
+    documents=[Document("The meaning of life is ...")],
+    query="What is the meaning of life?"
+)
 ```

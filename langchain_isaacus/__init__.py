@@ -1,6 +1,7 @@
 from importlib import metadata
 
 from langchain_isaacus.embeddings import IsaacusEmbeddings
+from langchain_isaacus.rerank import IsaacusRerank
 
 try:
     __version__ = metadata.version(__package__)
@@ -15,6 +16,7 @@ __all__ = [
     "IsaacusEmbeddings",
     "IsaacusLoader",
     "IsaacusRetriever",
+    "IsaacusRerank",
     "IsaacusToolkit",
     "IsaacusTool",
     "__version__",
