@@ -114,29 +114,31 @@ class IsaacusEmbeddings(Embeddings):
         self._client = None
         self._aclient = None
 
-    def _get_api_key(self) -> str:
+    def _get_api_key(self) -> Optional[str]:
         if isinstance(self.api_key, SecretStr):
-            api_key = self.api_key.get_secret_value()
-        else:
-            api_key = self.api_key
+            return self.api_key.get_secret_value()
 
-        return api_key
+        return None
 
     def _get_client(self) -> Isaacus:
         if not self._client:
-            self._client = Isaacus(
-                api_key=self._get_api_key(),
-                base_url=self.base_url,
-            )
+            api_key = self._get_api_key()
+            client_kwargs = {"base_url": self.base_url}
+            if api_key is not None:
+                client_kwargs["api_key"] = api_key
+
+            self._client = Isaacus(**client_kwargs)
 
         return self._client
 
     def _get_aclient(self) -> AsyncIsaacus:
         if not self._aclient:
-            self._aclient = AsyncIsaacus(
-                api_key=self._get_api_key(),
-                base_url=self.base_url,
-            )
+            api_key = self._get_api_key()
+            client_kwargs = {"base_url": self.base_url}
+            if api_key is not None:
+                client_kwargs["api_key"] = api_key
+
+            self._aclient = AsyncIsaacus(**client_kwargs)
 
         return self._aclient
 
