@@ -12,7 +12,7 @@ def test_langchain_isaacus_rerank_documents() -> None:
     """Test Isaacus Reranks."""
     query = "foo"
     documents = [Document("foo bar")]
-    rerank= IsaacusRerank(model=MODEL)
+    rerank = IsaacusRerank(model=MODEL)
     output = rerank.compress_documents(documents, query)
     assert len(output) == 1
 
@@ -21,7 +21,7 @@ def test_langchain_isaacus_rerank_documents_multiple() -> None:
     """Test Isaacus Reranks."""
     query = "foo"
     documents = [Document("foo bar"), Document("bar foo"), Document("foo")]
-    rerank= IsaacusRerank(model=MODEL)
+    rerank = IsaacusRerank(model=MODEL)
     output = rerank.compress_documents(documents, query)
     assert len(output) == 3
 
